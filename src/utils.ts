@@ -1,13 +1,25 @@
 import { existsSync, mkdir } from "fs";
 import { Page } from "puppeteer-core";
 
+
 /**
  * 创建并打开新的页面
  * @param url 页面地址
+ * @param params 页面参数
  * @returns Page
  */
-async function createPage(url: string) {
+async function createPage(
+  url: string,
+  params: Map<string, any> = null
+): Promise<Page> {
   const page = await global.__BROWSER__.newPage();
+
+  if (params != null) {
+    url = url + "?";
+    params.forEach((value, key) => {
+      url += `&${key}=${value}`;
+    });
+  }
   await page.goto(url);
   return page;
 }
@@ -40,9 +52,10 @@ async function snapshot(page: Page) {
  */
 function createDir(dir: string) {
   if (!existsSync(dir)) {
-    mkdir(dir, (err) => { });
+    mkdir(dir, (err) => {
+      
+    });
   }
 }
 
 export { createPage, snapshot };
-
