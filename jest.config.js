@@ -13,7 +13,7 @@ module.exports = {
   transform: {
     "^.+\\.ts$": "ts-jest",
   },
-  globalSetup: "./setup.js",
-  globalTeardown: "./teardown.js",
+  globalSetup: "./setup.ts",
+  globalTeardown: "./teardown.ts",
   testEnvironment: "./puppeteer_environment.js",
 };

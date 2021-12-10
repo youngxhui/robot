@@ -1,22 +1,20 @@
 const { mkdir, writeFile } = require("fs").promises;
-const os = require("os");
-const path = require("path");
+import { platform, tmpdir } from "os";
+import { join } from "path";
 const puppeteer = require("puppeteer-core");
 const { browserPath } = require("./config");
-const DIR = path.join(os.tmpdir(), "jest_puppeteer_global_setup");
+const DIR = join(tmpdir(), "jest_puppeteer_global_setup");
 
 module.exports = async function () {
-  
-
   let browser = null;
   console.log("browserPath is", browserPath);
   if (browserPath == "") {
-    const platform = os.platform();
-    if (platform === "linux") {
+    const plat = platform();
+    if (plat === "linux") {
       browser = await puppeteer.launch({
         executablePath: "/usr/bin/chromium-browser",
       });
-    } else if (platform === "darwin") {
+    } else if (plat === "darwin") {
       browser = await puppeteer.launch({
         executablePath:
           "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -39,5 +37,5 @@ module.exports = async function () {
 
   // use the file system to expose the wsEndpoint for TestEnvironments
   await mkdir(DIR, { recursive: true });
-  await writeFile(path.join(DIR, "wsEndpoint"), browser.wsEndpoint());
+  await writeFile(join(DIR, "wsEndpoint"), browser.wsEndpoint());
 };
